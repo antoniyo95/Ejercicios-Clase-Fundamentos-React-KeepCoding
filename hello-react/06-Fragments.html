@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.development.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/@babel/standalone@7.8.3/babel.min.js"
+  ></script>
+
+  <script type="text/babel">
+    const rootElement = document.getElementById('root');
+
+    // const message = <span className="message">Hello World!</span>;
+    // const message2 = <span className="message">Goodbye World!</span>;
+
+    // const message = text => <span className="message">{text}</span>;
+
+    // function Message(props) {
+    //   console.log(props);
+    //   return (
+    //     <span className="message">
+    //       {props.children}-{props.name}
+    //     </span>
+    //   );
+    // }
+
+    function Message({ children, name, ...props }) {
+      // const { children, name } = props;
+
+      // const children = props.children;
+      // const name = props.name;
+
+      return (
+        <span className="message" {...props}>
+          {children}-{name}
+        </span>
+      );
+    }
+
+    const msgElement = <Message>Goodbye</Message>;
+    console.log(msgElement);
+
+    const msgElement2 = (
+      <Message name="David">
+        <div>
+          <div>Hello</div>
+        </div>
+        <div>Hola</div>
+      </Message>
+    );
+    console.log(msgElement2);
+
+    const element = (
+      <div className="container">
+        {/* message('Hello') */}
+        {msgElement2}
+
+        {/* message('Goodbye') */}
+        {msgElement}
+      </div>
+    );
+
+    console.log('element', element);
+    ReactDOM.createRoot(rootElement).render(element);
+  </script>
+</html>
