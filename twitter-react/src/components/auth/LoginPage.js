@@ -5,19 +5,50 @@ import FormField from '../shared/FormField';
 import { login } from './service';
 
 import './LoginPage.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './context';
+import { useRef } from 'react';
+import { useEffect } from 'react';
 
-function LoginPage({ onLogin }) {
+function LoginPage() {
+  const { onLogin } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const renders = useRef(0);
+
+  useEffect(() => {
+    renders.current++;
+    console.log(renders.current, ' times rendered');
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
 
+  const resetError = () => {
+    setError(null);
+  };
+
   const handleSubmit = async event => {
     event.preventDefault();
-    await login(credentials);
 
-    // Logged in
-    onLogin();
+    resetError();
+    setIsLoading(true);
+    try {
+      await login(credentials);
+      setIsLoading(false);
+      // Logged in
+      onLogin();
+      // Redirect to pathname
+      const to = location.state?.from?.pathname || '/';
+      navigate(to);
+    } catch (error) {
+      setError(error);
+      setIsLoading(false);
+    }
   };
 
   const handleChange = event => {
@@ -27,7 +58,8 @@ function LoginPage({ onLogin }) {
     });
   };
 
-  const buttonDisabled = !credentials.username || !credentials.password;
+  const buttonDisabled =
+    isLoading || !credentials.username || !credentials.password;
 
   return (
     <div className="loginPage">
@@ -40,6 +72,7 @@ function LoginPage({ onLogin }) {
           className="loginForm-field"
           onChange={handleChange}
           value={credentials.username}
+          autofocus
         />
         <FormField
           type="password"
@@ -65,6 +98,11 @@ function LoginPage({ onLogin }) {
           }}
         /> */}
       </form>
+      {error && (
+        <div onClick={resetError} className="loginPage-error">
+          {error.message}
+        </div>
+      )}
     </div>
   );
 }

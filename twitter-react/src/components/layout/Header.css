@@ -25,8 +25,13 @@
   justify-content: flex-end;
 }
 
+.header-nav .header-nav-item {
+  align-self: center;
+  margin-left: 8px;
+}
+
 .header-nav .active {
-  color: green;
+  color: rgba(29, 161, 242, 1);
 }
 
 .header-button {
